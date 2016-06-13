@@ -31,7 +31,7 @@ function Game (canvas) {
             var n = Date.now ();
             this.last = this.current;
             this.current = n;
-            this.delta = this.current - this.last;
+            this.delta = (this.current - this.last);
         }
     };
     obj.colors = {

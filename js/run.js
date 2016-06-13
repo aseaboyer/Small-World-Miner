@@ -12,10 +12,10 @@ var planet = {
     }
 };
 var moon = {
-    "orbit": 1.4,
-    "radius": 6,
+    "orbit": 1.6,
+    "radius": 4,
     "planet": planet,
-    "speed":0.1,
+    "speed":0.01,
     "angle":0
 };
 /*
@@ -95,9 +95,9 @@ function Draw () {
     game.context.beginPath();
     game.context.arc(planet.position.x, planet.position.y, planet.radius, 0, 2 * Math.PI, false);
     game.context.fillStyle = 'green';
-    game.context.fill();
-    game.context.lineWidth = 0;
-    game.context.strokeStyle = '#003300';
+    //game.context.fill();
+    game.context.lineWidth = 1;
+    game.context.strokeStyle = 'green';
     game.context.stroke();
     
     /* DRAW A TEST SATELITE */
@@ -105,9 +105,9 @@ function Draw () {
     game.context.beginPath();
     game.context.arc(satLoc.x, satLoc.y, moon.radius, 0, 2 * Math.PI, false);
     game.context.fillStyle = 'tomato';
-    game.context.fill();
-    game.context.lineWidth = 0.2;
-    game.context.strokeStyle = '#666666';
+    //game.context.fill();
+    game.context.lineWidth = 1;
+    game.context.strokeStyle = 'tomato';
     game.context.stroke();
     
     
