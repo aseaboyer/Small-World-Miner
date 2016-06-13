@@ -1,0 +1,45 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>Small World Miner</title>
+    <meta name="description" content="Move through space, placing mining operations on planets you find to resource">
+    <meta name="author" content="Andy Seaboyer">
+
+    <link href='https://fonts.googleapis.com/css?family=Josefin+Sans:400,700,300' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="fonts/font-awesome-4.6.2/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <h1>Small World Miner</h1>
+    <section id="gameWrapper">
+        <canvas id="game" height="100%" width="100%"></canvas>
+    </section>
+    <section id="UI">
+        <div id="resources">
+            <div id="minerals"></div>
+            <div id="gases"></div>
+        </div>
+    </section>
+    
+    <footer>
+        <p><a target="_blank" href="http://www.colourlovers.com/palette/2652343/*Neon-Palette*">Colors Credit</a></p>
+    </footer>
+    
+    <script src="js/Game.js"></script>
+    <script src="js/Keyring.js"></script>
+    <script src="js/Tile.js"></script>
+    <script src="js/Player.js"></script>
+    <script src="js/Enemy.js"></script>
+    <script src="js/Coin.js"></script>
+    
+    <script src="js/run.js"></script>
+</body>
+</html>
