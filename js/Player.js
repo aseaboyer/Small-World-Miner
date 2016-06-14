@@ -10,6 +10,19 @@ function Player (xStart, yStart) {
             this.y = y;
         }
     };
+    obj.planet = null;
+    obj.isOrbiting = false;
+    obj.orbitAngle = 0;
+    obj.leavePlanet = function () {
+        this.planet = null;
+        obj.isOrbiting = false;
+    };
+    obj.orbitPlanet = function (planet, angle) {
+        this.planet = planet;
+        this.isOrbiting = true;
+        this.orbitAngle = angle;
+    };
+    obj.strokeStyle = 'tomato';
     
     obj.resources = {
         "minerals": 120,
@@ -27,6 +40,20 @@ function Player (xStart, yStart) {
         "setGases": function () {
             
         },
+    };
+    
+    obj.update = function (dt) {
+        this.orbitAngle += dt * 0.001;
+    };
+    obj.draw = function (c) {
+        var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);
+        c.beginPath();
+        c.arc(satLoc.x, satLoc.y, 5, 0, 2 * Math.PI, false);
+        //c.fillStyle = 'tomato';
+        //c.fill();
+        c.lineWidth = 1;
+        c.strokeStyle = this.strokeStyle;
+        c.stroke();
     };
     
     /*

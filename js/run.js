@@ -2,22 +2,9 @@
  * Vars
  */
 var game, keys,
-    player;
-var planet = {
-    "orbit": 1.2,
-    "radius": 20,
-    "position": {
-        "x": 200,
-        "y": 200
-    }
-};
-var moon = {
-    "orbit": 1.6,
-    "radius": 4,
-    "planet": planet,
-    "speed":0.01,
-    "angle":0
-};
+    player,
+    planets = new Array ();
+
 /*
  * Key presses
  */
@@ -39,8 +26,10 @@ document.getElementById ("restart").addEventListener("click", function (e) {
     game = new Game (c);
     keys = new Keyring ();
     
+    planets.push (new Planet (1.2, 20, 200, 200));
     
     player = new Player ();
+    player.orbitPlanet (planets [0], 0);
     
     /*
     game.spawnCoin ();
@@ -66,8 +55,8 @@ function GameLoop () {
             Updates
         */
         game.time.update ();
-
-        moon.angle += moon.speed * game.time.delta * 0.01;
+        
+        player.update (game.time.delta);
         
         //player.move (keys.current.state);
 
@@ -86,30 +75,25 @@ function Draw () {
     
     
     /* TEST DRAW A GREEN PLANET */
-    var radius = 10;
+    for (var i = 0; i < planets.length; i++) {
+        planets [i].draw (game.context);
+    }
     
     /* Added to clearCanvss
     canvas.height = canvas.clientHeight;
     canvas.width = canvas.clientWidth;
     */
+    /*
     game.context.beginPath();
-    game.context.arc(planet.position.x, planet.position.y, planet.radius, 0, 2 * Math.PI, false);
+    game.context.arc(planets [0].position.x, planets [0].position.y, planets [0].radius, 0, 2 * Math.PI, false);
     game.context.fillStyle = 'green';
     //game.context.fill();
     game.context.lineWidth = 1;
     game.context.strokeStyle = 'green';
-    game.context.stroke();
+    game.context.stroke();/*
     
-    /* DRAW A TEST SATELITE */
-    var satLoc = orbitPosition (moon.angle, moon.orbit * planet.radius, planet.position.x, planet.position.y);
-    game.context.beginPath();
-    game.context.arc(satLoc.x, satLoc.y, moon.radius, 0, 2 * Math.PI, false);
-    game.context.fillStyle = 'tomato';
-    //game.context.fill();
-    game.context.lineWidth = 1;
-    game.context.strokeStyle = 'tomato';
-    game.context.stroke();
-    
+    /* DRAW THE PLAYER (MOON) */
+    player.draw (game.context);
     
     /*
     // player
