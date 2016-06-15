@@ -1,6 +1,6 @@
 function Planet (orbit, radius, x, y) {
     var obj = {},
-        orbitRad = (radius * 1.6);
+        orbitRad = (radius * 1.9);
     
     obj.orbit = orbit;
     obj.radius = radius;
@@ -37,7 +37,38 @@ function Planet (orbit, radius, x, y) {
         }*/
     };
     
+    obj.miner = null;
+    obj.satellite = null;
+    obj.createMiner = function () {
+        this.miner = new Miner (this);
+    };
+    obj.createSatellite = function () {
+        this.satellite = new Satellite (this);
+    };
+    
+    obj.update = function (dt) {
+        // Update the constructs
+        if (this.miner != null) {
+            this.miner.update (dt);
+        }
+        if (this.satellite != null) {
+            this.satellite.update (dt);
+        }
+    };
     obj.draw = function (c) {
+        this.drawPlanet (c); // Draw the planet
+        
+        // Draw the constructs
+        if (this.miner != null) {
+            this.miner.draw (c);
+        }
+        if (this.satellite != null) {
+            this.satellite.draw (c);
+        }
+        
+    };
+    obj.drawPlanet = function (c) {
+        // Draw the planet
         c.beginPath();
         c.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false);
         c.fillStyle = 'tomato';

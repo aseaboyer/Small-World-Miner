@@ -27,6 +27,8 @@ document.getElementById ("restart").addEventListener("click", function (e) {
     keys = new Keyring ();
     
     planets.push (new Planet (1.2, 20, 200, 200));
+    planets [0].createSatellite ();
+    planets [0].createMiner ();
     
     player = new Player ();
     player.orbitPlanet (planets [0], 0);
@@ -55,6 +57,10 @@ function GameLoop () {
             Updates
         */
         game.time.update ();
+        
+        for (var i = 0; i < planets.length; i++) {
+            planets [i].update (game.time.delta);
+        }
         
         player.update (game.time.delta);
         

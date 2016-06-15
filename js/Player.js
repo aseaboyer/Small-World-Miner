@@ -47,13 +47,30 @@ function Player (xStart, yStart) {
     };
     obj.draw = function (c) {
         var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);
+        
         c.beginPath();
+        /*
         c.arc(satLoc.x, satLoc.y, 5, 0, 2 * Math.PI, false);
-        //c.fillStyle = 'tomato';
-        //c.fill();
         c.lineWidth = 1;
         c.strokeStyle = this.strokeStyle;
+        c.stroke();*/
+        
+        c.save ();
+        c.translate(satLoc.x, satLoc.y);
+        c.rotate (this.orbitAngle);
+        
+        // build triangle object
+        c.beginPath();
+        c.moveTo(5,0);
+        c.lineTo(-5, -5);
+        c.lineTo(-5, 5);
+        c.closePath();
+        // stroke outline
+        c.lineWidth = 1;
+        c.strokeStyle = 'white';
         c.stroke();
+        
+        c.restore ();
     };
     
     /*
