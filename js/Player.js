@@ -1,4 +1,4 @@
-function Player (xStart, yStart) {
+function Player (xStart, yStart, rotStart) {
     var obj = {},
         now = Date.now ();
     
@@ -10,6 +10,29 @@ function Player (xStart, yStart) {
             this.y = y;
         }
     };
+    obj.rotation = rotStart;
+    obj.torque = 0;
+    obj.rotationSpeed = 0.001;
+    obj.rotate = function (val) {
+        this.torque += (val * this.rotationSpeed); 
+    };
+    obj.currentSpeed = 0;
+    obj.maxSpeed = 10;
+    obj.acceleration = 0.01;
+    obj.accelerate = function (val) {
+        this.currentSpeed += (val * this.acceleration); 
+    };
+    
+    obj.bounds = 5;
+    obj.strokeStyle = 'tomato';
+    
+    obj.isOrbitting = function (planet) {
+        // returns boolean "is within gravitational range" of the planet in question
+        
+        return false;
+    };
+    
+    /*
     obj.planet = null;
     obj.isOrbiting = false;
     obj.orbitAngle = 0;
@@ -22,8 +45,7 @@ function Player (xStart, yStart) {
         this.isOrbiting = true;
         this.orbitAngle = angle;
     };
-    obj.strokeStyle = 'tomato';
-    
+    */
     obj.resources = {
         "minerals": 120,
         "gases": 120,
@@ -43,12 +65,19 @@ function Player (xStart, yStart) {
     };
     
     obj.update = function (dt) {
-        this.orbitAngle += dt * 0.001;
+        var newPos = {};
+        
+        this.rotation += this.torque;
+        
+        newPos.x = this.position.x - Math.cos(this.rotation) * this.currentSpeed;
+        newPos.y = this.position.y + Math.sin(this.rotation) * this.currentSpeed;
+        
+        this.position.x = newPos.x;
+        this.position.y = newPos.y;
     };
     obj.draw = function (c) {
-        var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);
+        //var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);
         
-        c.beginPath();
         /*
         c.arc(satLoc.x, satLoc.y, 5, 0, 2 * Math.PI, false);
         c.lineWidth = 1;
@@ -56,15 +85,18 @@ function Player (xStart, yStart) {
         c.stroke();*/
         
         c.save ();
-        c.translate(satLoc.x, satLoc.y);
-        c.rotate (this.orbitAngle);
+        c.translate(this.position.x, this.position.y);
+        c.rotate (this.rotation);
         
         // build triangle object
         c.beginPath();
-        c.moveTo(5,0);
-        c.lineTo(-5, -5);
-        c.lineTo(-5, 5);
-        c.closePath();
+        c.moveTo(0,-5);
+        c.lineTo(0,5);
+        c.lineTo(5,5);
+        c.lineTo(0,-5);
+        c.lineTo(-5,5);
+        c.lineTo(0,5);
+        //c.closePath();
         // stroke outline
         c.lineWidth = 1;
         c.strokeStyle = 'white';

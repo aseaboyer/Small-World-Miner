@@ -11,6 +11,10 @@ function Planet (orbit, radius, x, y) {
         "y": y
     };
     obj.strokeStyle = 'green';
+    obj.gravity = {
+        distance: radius * 3,
+        strength: radius
+    };
     /*
     "orbit": 1.6,
     "radius": 4,

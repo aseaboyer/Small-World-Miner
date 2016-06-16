@@ -8,13 +8,13 @@ var game, keys,
 /*
  * Key presses
  */
-/*document.body.addEventListener("keydown", function (e) {
+document.body.addEventListener("keydown", function (e) {
     keys.press (e.keyCode);
 });
 document.body.addEventListener("keyup", function (e) {
     keys.release (e.keyCode);
 });
-document.getElementById ("restart").addEventListener("click", function (e) {
+/*document.getElementById ("restart").addEventListener("click", function (e) {
     game.restart ();
 });*/
 
@@ -30,8 +30,8 @@ document.getElementById ("restart").addEventListener("click", function (e) {
     planets [0].createSatellite ();
     planets [0].createMiner ();
     
-    player = new Player ();
-    player.orbitPlanet (planets [0], 0);
+    player = new Player (c.clientWidth * 0.5, c.clientHeight * 0.5, -90);
+    //player.orbitPlanet (planets [0], 0);
     
     /*
     game.spawnCoin ();
@@ -47,7 +47,8 @@ document.getElementById ("restart").addEventListener("click", function (e) {
 function GameLoop () {
     window.requestAnimationFrame(GameLoop);
     
-    var now = Date.now ();
+    var now = Date.now (),
+        playerTilt = 0;
     
     // get sthe size of the body/html/screen, set the canvas dimmensions to taht size
     
@@ -60,6 +61,26 @@ function GameLoop () {
         
         for (var i = 0; i < planets.length; i++) {
             planets [i].update (game.time.delta);
+        }
+        
+        if (keys.isPressed ("left")) {
+            playerTilt--;
+        }
+        if (keys.isPressed ("right")) {
+            playerTilt++;
+        }
+        if (playerTilt !== 0) {
+            player.rotate (playerTilt);
+        }
+        
+        if (keys.isPressed ("up")) {
+            playerTilt--;
+        }
+        if (keys.isPressed ("down")) {
+            playerTilt++;
+        }
+        if (playerTilt !== 0) {
+            player.accelerate (playerTilt);
         }
         
         player.update (game.time.delta);

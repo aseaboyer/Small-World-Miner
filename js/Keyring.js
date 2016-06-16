@@ -1,42 +1,39 @@
 function Keyring () {
     var obj = {};
     
-    obj.current = {
-        pressed: false,
-        state: "",
-        num: 0
+    obj.pressed = {
+        "up":false,
+        "down":false,
+        "left":false,
+        "right":false
     };
     
     obj.press = function (k) {
         if (k === 87 || k === 38) {
-            this.current.pressed = true;
-            this.current.state = "up";
-            this.current.num = k;
+            this.pressed.up = true;
         } else if (k === 83 || k === 40) {
-            this.current.pressed = true;
-            this.current.state = "down";
-            this.current.num = k;
+            this.pressed.down = true;
         } else if (k === 65 || k === 37) {
-            this.current.pressed = true;
-            this.current.state = "left";
-            this.current.num = k;
+            this.pressed.left = true;
         } else if (k === 68 || k === 39) {
-            this.current.pressed = true;
-            this.current.state = "right";
-            this.current.num = k;
+            this.pressed.right = true;
         }
-        
-        document.body.dataset.keyPressed = this.current.state;
     };
     obj.release = function (k) {
-        if (this.current.pressed === true) {
-            if (this.current.num === k) {
-                this.current.pressed = false;
-                this.current.state = "";
-                this.current.num = 0;
-            }
+        if (k === 87 || k === 38) {
+            this.pressed.up = false;
+        } else if (k === 83 || k === 40) {
+            this.pressed.down = false;
+        } else if (k === 65 || k === 37) {
+            this.pressed.left = false;
+        } else if (k === 68 || k === 39) {
+            this.pressed.right = false;
         }
-        document.body.dataset.keyPressed = "";
+    };
+    
+    obj.isPressed = function (keyName) {
+        if (this.pressed [keyName] === true) { return true; }
+        return false;
     };
     
     return obj;
