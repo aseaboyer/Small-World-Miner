@@ -30,7 +30,7 @@ document.body.addEventListener("keyup", function (e) {
     planets [0].createSatellite ();
     planets [0].createMiner ();
     
-    player = new Player (c.clientWidth * 0.5, c.clientHeight * 0.5, -90);
+    player = new Player (c.clientWidth * 0.5, c.clientHeight * 0.5, 90);
     //player.orbitPlanet (planets [0], 0);
     
     /*
@@ -48,7 +48,8 @@ function GameLoop () {
     window.requestAnimationFrame(GameLoop);
     
     var now = Date.now (),
-        playerTilt = 0;
+        playerTilt = 0,
+        playerDir = 0;
     
     // get sthe size of the body/html/screen, set the canvas dimmensions to taht size
     
@@ -74,13 +75,13 @@ function GameLoop () {
         }
         
         if (keys.isPressed ("up")) {
-            playerTilt--;
+            playerDir--;
         }
         if (keys.isPressed ("down")) {
-            playerTilt++;
+            playerDir++;
         }
-        if (playerTilt !== 0) {
-            player.accelerate (playerTilt);
+        if (playerDir !== 0) {
+            player.accelerate (playerDir);
         }
         
         player.update (game.time.delta);

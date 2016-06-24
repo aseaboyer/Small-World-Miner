@@ -30,8 +30,6 @@ function Miner (planet) {
     obj.draw = function (c) {
         var satLoc = orbitPosition (this.orbitAngle, this.planet.radius, this.planet.position.x, this.planet.position.y);
         
-        c.beginPath();
-        
         c.save ();
         c.translate(satLoc.x, satLoc.y);
         c.rotate (this.orbitAngle);

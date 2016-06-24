@@ -10,6 +10,17 @@ function Player (xStart, yStart, rotStart) {
             this.y = y;
         }
     };
+    /*
+    @aseaboyer - replace current piece-meal items with this later
+    obj.rotation = {
+        "value": rotStart,
+        "radians": radianStart,
+        "torque": 0,
+        "speed": 0.001,
+        "rotate": function (val) {
+            this.torque += (val * this.speed);
+        },
+    };*/
     obj.rotation = rotStart;
     obj.torque = 0;
     obj.rotationSpeed = 0.001;
@@ -65,28 +76,33 @@ function Player (xStart, yStart, rotStart) {
     };
     
     obj.update = function (dt) {
-        var newPos = {};
+        var newPos = {},
+            rad;
         
         this.rotation += this.torque;
+        rad = this.rotation * Math.PI / 180
         
-        newPos.x = this.position.x - Math.cos(this.rotation) * this.currentSpeed;
-        newPos.y = this.position.y + Math.sin(this.rotation) * this.currentSpeed;
+        newPos.x = Math.cos(rad) * this.currentSpeed;
+        newPos.y = Math.sin(rad) * this.currentSpeed;
         
-        this.position.x = newPos.x;
-        this.position.y = newPos.y;
+        this.position.x += newPos.x;
+        this.position.y += newPos.y;
     };
     obj.draw = function (c) {
+        var rad = this.rotation * Math.PI / 180;
         //var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);
         
-        /*
-        c.arc(satLoc.x, satLoc.y, 5, 0, 2 * Math.PI, false);
+        /*c.beginPath();
+        c.arc(this.position.x, this.position.y, 5, 0, 2 * Math.PI, false);
         c.lineWidth = 1;
         c.strokeStyle = this.strokeStyle;
-        c.stroke();*/
+        c.stroke();
+        */
         
+         // Correct draw, wrong position?
         c.save ();
         c.translate(this.position.x, this.position.y);
-        c.rotate (this.rotation);
+        c.rotate (rad);
         
         // build triangle object
         c.beginPath();
