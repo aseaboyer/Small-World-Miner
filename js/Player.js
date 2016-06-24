@@ -2,6 +2,7 @@ function Player (xStart, yStart, rotStart) {
     var obj = {},
         now = Date.now ();
     
+    obj.size = 5;
     obj.position = {
         x: xStart,
         y: yStart,
@@ -23,7 +24,7 @@ function Player (xStart, yStart, rotStart) {
     };*/
     obj.rotation = rotStart;
     obj.torque = 0;
-    obj.rotationSpeed = 0.001;
+    obj.rotationSpeed = 0.02;
     obj.rotate = function (val) {
         this.torque += (val * this.rotationSpeed); 
     };
@@ -85,38 +86,39 @@ function Player (xStart, yStart, rotStart) {
         newPos.x = Math.cos(rad) * this.currentSpeed;
         newPos.y = Math.sin(rad) * this.currentSpeed;
         
-        this.position.x += newPos.x;
-        this.position.y += newPos.y;
+        this.position.x -= newPos.x;
+        this.position.y -= newPos.y;
     };
     obj.draw = function (c) {
-        var rad = this.rotation * Math.PI / 180;
-        //var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);
+        var rad = this.rotation * Math.PI / 180,
+            side = this.size;
         
-        /*c.beginPath();
-        c.arc(this.position.x, this.position.y, 5, 0, 2 * Math.PI, false);
-        c.lineWidth = 1;
-        c.strokeStyle = this.strokeStyle;
-        c.stroke();
-        */
-        
-         // Correct draw, wrong position?
         c.save ();
         c.translate(this.position.x, this.position.y);
         c.rotate (rad);
         
-        // build triangle object
+        // build ship object
         c.beginPath();
-        c.moveTo(0,-5);
-        c.lineTo(0,5);
-        c.lineTo(5,5);
-        c.lineTo(0,-5);
-        c.lineTo(-5,5);
-        c.lineTo(0,5);
-        //c.closePath();
+        c.moveTo (side * 1.5, 0);
+        c.lineTo (0, side);
+        c.lineTo (-side, 0);
+        c.lineTo (0, -side);
+        c.lineTo (side * 1.5, 0);
+        c.lineTo (-side, 0);
+        
         // stroke outline
         c.lineWidth = 1;
         c.strokeStyle = 'white';
         c.stroke();
+        c.closePath();
+        
+        // draw healthbar
+        c.beginPath();
+        c.arc(0, 0, side * 2, 0, (2 * Math.PI) * this.durability.ofOne, false);
+        c.lineWidth = 1;
+        c.strokeStyle = "rgba(255, 255, 255, 0.5)";
+        c.stroke();
+        c.closePath();
         
         c.restore ();
     };
@@ -174,6 +176,18 @@ function Player (xStart, yStart, rotStart) {
     
     
     obj.setHealth (50);*/
+    
+    obj.durability = {
+        "current": 0,
+        "max": 10,
+        "percent": 100,
+        "ofOne": 1,
+        "change": function (val) {
+            this.current += val;
+            this.ofOne = this.current / this.max;
+            this.percent = (this.ofOne) * 100;
+        },
+    };
     
     return obj;
 }

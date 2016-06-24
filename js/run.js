@@ -3,7 +3,7 @@
  */
 var game, keys,
     player,
-    planets = new Array ();
+    viewport = new Viewport ();
 
 /*
  * Key presses
@@ -26,12 +26,9 @@ document.body.addEventListener("keyup", function (e) {
     game = new Game (c);
     keys = new Keyring ();
     
-    planets.push (new Planet (1.2, 20, 200, 200));
-    planets [0].createSatellite ();
-    planets [0].createMiner ();
+    game.addPlanet (1.2, 20, 200, 200, true, true);
     
-    player = new Player (c.clientWidth * 0.5, c.clientHeight * 0.5, 90);
-    //player.orbitPlanet (planets [0], 0);
+    player = new Player (c.clientWidth * 0.5, c.clientHeight * 0.5, 0);
     
     /*
     game.spawnCoin ();
@@ -59,11 +56,9 @@ function GameLoop () {
             Updates
         */
         game.time.update ();
+        game.update ();
         
-        for (var i = 0; i < planets.length; i++) {
-            planets [i].update (game.time.delta);
-        }
-        
+        // @aseaboyer - shove below into the player update?
         if (keys.isPressed ("left")) {
             playerTilt--;
         }
@@ -101,27 +96,7 @@ function Draw () {
     // clear and reset canvas
     game.clearCanvas ();
     
-    
-    /* TEST DRAW A GREEN PLANET */
-    for (var i = 0; i < planets.length; i++) {
-        planets [i].draw (game.context);
-    }
-    
-    /* Added to clearCanvss
-    canvas.height = canvas.clientHeight;
-    canvas.width = canvas.clientWidth;
-    */
-    /*
-    game.context.beginPath();
-    game.context.arc(planets [0].position.x, planets [0].position.y, planets [0].radius, 0, 2 * Math.PI, false);
-    game.context.fillStyle = 'green';
-    //game.context.fill();
-    game.context.lineWidth = 1;
-    game.context.strokeStyle = 'green';
-    game.context.stroke();/*
-    
-    /* DRAW THE PLAYER (MOON) */
-    player.draw (game.context);
+    game.draw ();
     
     /*
     // player

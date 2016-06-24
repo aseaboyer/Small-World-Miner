@@ -34,12 +34,6 @@ function Game (canvas) {
             this.delta = (this.current - this.last);
         }
     };
-    obj.colors = {
-        player: "47,181,243",
-        enemy: "252,130,195",
-        coin: "225,200,41",
-        spawningEnemy: "0,0,0"
-    };
     
     obj.clearCanvas = function () {
         this.canvas.height = this.canvas.clientHeight;
@@ -47,51 +41,33 @@ function Game (canvas) {
         this.context.clearRect (0, 0, this.canvas.width, this.canvas.height);
     };
     
-    obj.drawBit = function (x, y, color, alpha) {
-        var color = "rgba(" + color + "," + alpha + ")";
-        obj.context.fillStyle = color;
-        obj.context.fillRect ( (x * obj.bitSize), (y * obj.bitSize),
-            obj.bitSize, obj.bitSize);
+    obj.update = function () {
+        for (var i = 0; i < this.planets.length; i++) {
+            this.planets [i].update (this.time.delta);
+        }
     };
     
-    obj.purse = document.getElementById ("purse");
-    obj.coin = {};
-    obj.coinsCollected = 0;
-    obj.spawnCoin = function () {
-        var x = Math.floor(Math.random() * this.board.width),
-            y = Math.floor(Math.random() * this.board.height);
-        this.coin = new Coin (x, y);
-    };
-    obj.collectCoin = function () {
-        this.coinsCollected++;
-        this.spawnCoin ();
-        this.purse.innerHTML = this.coinsCollected;
-        player.changeHealth (3);
+    obj.draw = function () {
+        /* TEST PLANETS */
+        for (var i = 0; i < this.planets.length; i++) {
+            this.planets [i].draw (this.context);
+        }
+        
+        /* DRAW THE PLAYER */
+        player.draw (this.context);
     };
     
-    obj.enemies = new Array ();
-    obj.lastSpawnedEnemy = 0;
-    obj.maxSpawnFrequency = 2000;
-    obj.spawnEnemy = function () {
-        var x = Math.floor(Math.random() * this.board.width),
-            y = Math.floor(Math.random() * this.board.height);
-        this.enemies.push (new Enemy (x, y));
-        this.lastSpawnedEnemy = Date.now ();
-    };
-    obj.removeEnemy = function (num) {
-        this.enemies.splice (num, 1);
-        //this.spawnEnemy ();
-    };
-    
-    document.body.dataset.killScreen = "false";
-    obj.killScreen = false;
-    obj.openKillScreen = function () {
-        document.body.dataset.killScreen = "true";
-        this.paused = true;
-    };
-    
-    obj.restart = function () {
-        location.reload ();
+    obj.planets = [];
+    obj.addPlanet = function (orbit, radius, x, y, hasS, hasM) {
+        this.planets.push (new Planet (orbit, radius, x, y));
+        var newPlanet = this.planets [this.planets.length-1];
+        
+        if (hasS === true) {
+            newPlanet.createSatellite ();
+        }
+        if (hasM === true) {
+            newPlanet.createMiner ();
+        }
     };
     
     return obj;
