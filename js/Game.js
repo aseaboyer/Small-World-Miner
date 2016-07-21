@@ -45,9 +45,15 @@ function Game (canvas) {
         for (var i = 0; i < this.planets.length; i++) {
             this.planets [i].update (this.time.delta);
         }
+        
+        viewport.update (player.position, this.canvas.width,   
+                        this.canvas.height);
     };
     
     obj.draw = function () {
+        /* MOVE VIEWPORT */
+        viewport.center (this.context);
+                            
         /* TEST PLANETS */
         for (var i = 0; i < this.planets.length; i++) {
             this.planets [i].draw (this.context);
@@ -58,16 +64,19 @@ function Game (canvas) {
     };
     
     obj.planets = [];
-    obj.addPlanet = function (orbit, radius, x, y, hasS, hasM) {
-        this.planets.push (new Planet (orbit, radius, x, y));
-        var newPlanet = this.planets [this.planets.length-1];
-        
+    //obj.addPlanet = function (x, y, orbit, radius, hasS, hasM) {
+    obj.addPlanet = function (x, y, mass, density, hasS, hasM) {
+        var newPlanet = new Planet (x, y, mass, density);
+        //var newPlanet = this.planets [this.planets.length-1];
+        //console.log (newPlanet);
         if (hasS === true) {
             newPlanet.createSatellite ();
         }
         if (hasM === true) {
             newPlanet.createMiner ();
         }
+        
+        this.planets.push (newPlanet);
     };
     
     return obj;

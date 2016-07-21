@@ -25,7 +25,7 @@ function Satellite (planet) {
     };
     
     obj.update = function (dt) {
-        this.orbitAngle += dt * 0.001;
+        this.orbitAngle += dt * 0.0002;
     };
     obj.draw = function (c) {
         var satLoc = orbitPosition (this.orbitAngle, this.planet.orbitRadius, this.planet.position.x, this.planet.position.y);

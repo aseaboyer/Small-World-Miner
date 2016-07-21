@@ -1,19 +1,29 @@
-function Planet (orbit, radius, x, y) {
-    var obj = {},
-        orbitRad = (radius * 1.9);
+function Planet (x, y, mass, density) {
+    var obj = {};
     
-    obj.orbit = orbit;
-    obj.radius = radius;
-    obj.orbitRadius = orbitRad;
+    obj.strokeStyle = 'green';
+    
+    obj.mass = mass;
+    obj.density = density;
+    // Instead of setting gravity, size and radius based on the orbit/radius vars, base it on the mass and density
+    // In the declaration, the player should set (x,y,mass,density) instead
+    obj.gravity = {
+        distance: mass * 3,
+        strength: mass * 0.1
+    };
+    obj.orbit = mass * (3 * density);
+    obj.radius = mass * density;
+    obj.orbitRadius = mass * (2 * density);
     obj.orbitSpeed = 0.01;
     obj.position = {
         "x": x,
         "y": y
     };
-    obj.strokeStyle = 'green';
-    obj.gravity = {
-        distance: radius * 3,
-        strength: radius
+    obj.inHarvestRange = function (other) {
+        if (Object.distance (this, other) <= this.orbitRadius) {
+            return true;
+        }
+        return false;
     };
     /*
     "orbit": 1.6,
@@ -75,7 +85,7 @@ function Planet (orbit, radius, x, y) {
         // Draw the planet
         c.beginPath();
         c.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI, false);
-        c.fillStyle = 'tomato';
+        //c.fillStyle = 'tomato';
         //c.fill();
         c.lineWidth = 1;
         c.strokeStyle = this.strokeStyle;

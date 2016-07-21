@@ -1,5 +1,6 @@
 function Player (xStart, yStart, rotStart) {
     var obj = {},
+        radStart = rotStart * Math.PI / 180,
         now = Date.now ();
     
     obj.size = 5;
@@ -11,6 +12,8 @@ function Player (xStart, yStart, rotStart) {
             this.y = y;
         }
     };
+    
+    obj.mass = 1;
     /*
     @aseaboyer - replace current piece-meal items with this later
     obj.rotation = {
@@ -22,18 +25,52 @@ function Player (xStart, yStart, rotStart) {
             this.torque += (val * this.speed);
         },
     };*/
-    obj.rotation = rotStart;
-    obj.torque = 0;
-    obj.rotationSpeed = 0.02;
-    obj.rotate = function (val) {
-        this.torque += (val * this.rotationSpeed); 
+    obj.rotation = {
+        "value":rotStart,
+        "radians":radStart,
+        "changeSpeed":0.02,
+        "GUI": document.getElementById ("rotation"),
+        "update": function (torque) {
+            this.value = (this.value + torque) % 360;
+            this.radians = this.value * Math.PI / 180;
+            this.GUI.innerHTML = this.value.toFixed (1);
+        }
     };
+    obj.torque = {
+        "value": 0,
+        "cap": 1,
+        "change": function (val) {
+            this.value += (val);
+            if (this.value > this.cap) { this.value = this.cap; }
+            if (this.value < -this.cap) { this.value = -this.cap; }
+        }
+    };
+    obj.rotate = function (val) {
+        this.torque.change (val * this.rotation.changeSpeed); 
+    };
+    obj.speed = {
+        "value": 0,
+        "max": 1.1,
+        acceleration: 0.01,
+        "accelerate": function (val) {
+            this.value += (val * this.acceleration);
+            if (this.value > this.max) { this.value = this.max; }
+            if (this.value < -this.max) { this.value = -this.max; }
+            this.display ();
+        },
+        displayItem: document.getElementById ("speed"),
+        display: function () {
+            this.displayItem.innerHTML = this.value.toFixed (2);
+        }
+    };
+    /*
     obj.currentSpeed = 0;
     obj.maxSpeed = 10;
     obj.acceleration = 0.01;
     obj.accelerate = function (val) {
         this.currentSpeed += (val * this.acceleration); 
     };
+    */
     
     obj.bounds = 5;
     obj.strokeStyle = 'tomato';
@@ -44,20 +81,25 @@ function Player (xStart, yStart, rotStart) {
         return false;
     };
     
-    /*
-    obj.planet = null;
-    obj.isOrbiting = false;
-    obj.orbitAngle = 0;
-    obj.leavePlanet = function () {
-        this.planet = null;
-        obj.isOrbiting = false;
+    obj.contrails = {
+        "objects": new Array (),
+        "lifeTime": 1000,
+        "lastCreated": now,
+        "sizeModifier": 5,
+        "calculateSize": function (spd) {
+            return spd * this.sizeModifier;
+        },
+        create: function (x, y, s) {
+            var size = this.calculateSize (s);
+            this.objects.push (new Contrail (x, y, size, this.lifeTime));
+        },
+        draw: function (ctx) {
+            for (var x = i; i < this.objects.length; i++) {
+                this.objects [i].draw (ctx)
+            }
+        }
     };
-    obj.orbitPlanet = function (planet, angle) {
-        this.planet = planet;
-        this.isOrbiting = true;
-        this.orbitAngle = angle;
-    };
-    */
+    
     obj.resources = {
         "minerals": 120,
         "gases": 120,
@@ -80,18 +122,22 @@ function Player (xStart, yStart, rotStart) {
         var newPos = {},
             rad;
         
-        this.rotation += this.torque;
-        rad = this.rotation * Math.PI / 180
+        this.rotation.update (this.torque.value);
         
-        newPos.x = Math.cos(rad) * this.currentSpeed;
-        newPos.y = Math.sin(rad) * this.currentSpeed;
+        rad = this.rotation.radians;
+        newPos.x = Math.cos(rad) * this.speed.value;
+        newPos.y = Math.sin(rad) * this.speed.value;
         
         this.position.x -= newPos.x;
         this.position.y -= newPos.y;
     };
     obj.draw = function (c) {
-        var rad = this.rotation * Math.PI / 180,
+        var rad = this.rotation.value * Math.PI / 180,
             side = this.size;
+        
+        for (var i = 0; i < game.planets.length; i++) {
+            
+        }
         
         c.save ();
         c.translate(this.position.x, this.position.y);
@@ -99,16 +145,16 @@ function Player (xStart, yStart, rotStart) {
         
         // build ship object
         c.beginPath();
-        c.moveTo (side * 1.5, 0);
+        c.moveTo (side, 0);
         c.lineTo (0, side);
-        c.lineTo (-side, 0);
+        c.lineTo (-side * 1.5, 0);
         c.lineTo (0, -side);
-        c.lineTo (side * 1.5, 0);
-        c.lineTo (-side, 0);
+        c.lineTo (side, 0);
+        c.lineTo (-side * 1.5, 0);
         
         // stroke outline
         c.lineWidth = 1;
-        c.strokeStyle = 'white';
+        c.strokeStyle = color.white;
         c.stroke();
         c.closePath();
         
@@ -116,7 +162,7 @@ function Player (xStart, yStart, rotStart) {
         c.beginPath();
         c.arc(0, 0, side * 2, 0, (2 * Math.PI) * this.durability.ofOne, false);
         c.lineWidth = 1;
-        c.strokeStyle = "rgba(255, 255, 255, 0.5)";
+        c.strokeStyle = color.white50;
         c.stroke();
         c.closePath();
         

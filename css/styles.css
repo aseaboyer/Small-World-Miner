@@ -35,6 +35,14 @@ h1 {
     width:100%;
 }
 
+#HUD {
+    bottom:10px;
+    color:white;
+    left:10px;
+    position:absolute;
+    z-index:45;
+}
+
 #coins {
     color:rgba(24,221,0,1);
     height:50px;
@@ -92,27 +100,6 @@ h1 {
 }
 body[data-kill-screen="true"] #killScreen {
     height: 100px;
-}
-
-#dPad {
-    border:10px solid #666;
-    bottom:10px;
-    height:10px;
-    left:10px;
-    position:absolute;
-    width:10px;
-}
-body[data-key-pressed="up"] #dPad {
-    border-top-color:rgba(47,181,243,1);
-}
-body[data-key-pressed="right"] #dPad {
-    border-right-color:rgba(47,181,243,1);
-}
-body[data-key-pressed="down"] #dPad {
-    border-bottom-color:rgba(47,181,243,1);
-}
-body[data-key-pressed="left"] #dPad {
-    border-left-color:rgba(47,181,243,1);
 }
 
 footer {
